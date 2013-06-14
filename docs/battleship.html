@@ -28,17 +28,17 @@
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
               <pre><code>mehh Battleship against yourself.
- This is a battleship practice app I made to learn backbone.
- There&#39;s no backend, and you can only play against yourself.</code></pre>
+This is a battleship practice app I made to learn backbone.
+There&#39;s no backend, and you can only play against yourself.</code></pre>
 <p>Default namespaces for the app.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="keyword">var</span> app = {
-	views: {},
-	models: {},
-	collections: {},
-	templates: {}
+  views: {},
+  models: {},
+  collections: {},
+  templates: {}
 };</pre></div></div>
             
         </li>
@@ -68,15 +68,15 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>app.models.Ship = Backbone.Model.extend({
-	initialize: <span class="keyword">function</span>(attr){
-		<span class="keyword">this</span>.set(<span class="string">'remainingLives'</span>, attr.length, {silent: <span class="literal">true</span>});
-	},
-	defaults: {
-		deployed: <span class="literal">false</span>
-	},
-	isSunk: <span class="keyword">function</span>(){
-		<span class="keyword">return</span> <span class="keyword">this</span>.get(<span class="string">"remainingLives"</span>) &lt;= <span class="number">0</span>;
-	},</pre></div></div>
+  initialize: <span class="keyword">function</span>(attr){
+    <span class="keyword">this</span>.set(<span class="string">'remainingLives'</span>, attr.length, {silent: <span class="literal">true</span>});
+  },
+  defaults: {
+    deployed: <span class="literal">false</span>
+  },
+  isSunk: <span class="keyword">function</span>(){
+    <span class="keyword">return</span> <span class="keyword">this</span>.get(<span class="string">"remainingLives"</span>) &lt;= <span class="number">0</span>;
+  },</pre></div></div>
             
         </li>
         
@@ -91,18 +91,18 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>	hit: <span class="keyword">function</span>(){
-		<span class="keyword">var</span> numOfLives = <span class="keyword">this</span>.get(<span class="string">"remainingLives"</span>);
-		<span class="keyword">this</span>.set(<span class="string">"remainingLives"</span>, numOfLives-<span class="number">1</span>);
+            <div class="content"><div class='highlight'><pre>  hit: <span class="keyword">function</span>(){
+    <span class="keyword">var</span> numOfLives = <span class="keyword">this</span>.get(<span class="string">"remainingLives"</span>);
+    <span class="keyword">this</span>.set(<span class="string">"remainingLives"</span>, numOfLives-<span class="number">1</span>);
 
-		<span class="keyword">this</span>.trigger(<span class="string">"hit"</span>, <span class="keyword">this</span>);
+    <span class="keyword">this</span>.trigger(<span class="string">"hit"</span>, <span class="keyword">this</span>);
 
-		<span class="keyword">if</span> (<span class="keyword">this</span>.isSunk()){
-			<span class="keyword">this</span>.trigger(<span class="string">"sunk"</span>, <span class="keyword">this</span>);
-		}
+    <span class="keyword">if</span> (<span class="keyword">this</span>.isSunk()){
+      <span class="keyword">this</span>.trigger(<span class="string">"sunk"</span>, <span class="keyword">this</span>);
+    }
 
-		<span class="keyword">return</span> <span class="keyword">this</span>;
-	}
+    <span class="keyword">return</span> <span class="keyword">this</span>;
+  }
 });</pre></div></div>
             
         </li>
@@ -135,7 +135,7 @@ with a length of 3, then there would be 3 placeables pointing to that ship.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>app.models.Placeable = Backbone.Model.extend({
-	defaults: {</pre></div></div>
+  defaults: {</pre></div></div>
             
         </li>
         
@@ -150,9 +150,9 @@ with a length of 3, then there would be 3 placeables pointing to that ship.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>		placementState: <span class="string">""</span>,
-		ship: <span class="literal">null</span>
-	},</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    placementState: <span class="string">""</span>,
+    ship: <span class="literal">null</span>
+  },</pre></div></div>
             
         </li>
         
@@ -169,7 +169,7 @@ make up a graph. Makes it easier to walk around.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>	siblings: {},</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  siblings: {},</pre></div></div>
             
         </li>
         
@@ -184,9 +184,9 @@ make up a graph. Makes it easier to walk around.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>	andEachAdjacentCells: <span class="keyword">function</span>(num, direction, callback){
-		_.each(<span class="keyword">this</span>.andAdjacentCells(num, direction), callback);
-	},</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  andEachAdjacentCells: <span class="keyword">function</span>(num, direction, callback){
+    _.each(<span class="keyword">this</span>.andAdjacentCells(num, direction), callback);
+  },</pre></div></div>
             
         </li>
         
@@ -202,20 +202,20 @@ and number of cells to retrieve.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>	andAdjacentCells: <span class="keyword">function</span>(num, direction){
-		<span class="keyword">var</span> foundCells = [<span class="keyword">this</span>];
-		num--;<span class="comment">// because its inclusive of this</span>
+            <div class="content"><div class='highlight'><pre>  andAdjacentCells: <span class="keyword">function</span>(num, direction){
+    <span class="keyword">var</span> foundCells = [<span class="keyword">this</span>];
+    num--;<span class="comment">// because its inclusive of this</span>
 
-		<span class="keyword">while</span>(num--){
-			foundCells.push(_.last(foundCells).siblings[direction]);
+    <span class="keyword">while</span>(num--){
+      foundCells.push(_.last(foundCells).siblings[direction]);
 
-			<span class="keyword">if</span> ( _.last(foundCells) == <span class="literal">null</span>){
-				foundCells = [];
-				<span class="keyword">break</span>;
-			};
-		}
-		<span class="keyword">return</span> foundCells;
-	},</pre></div></div>
+      <span class="keyword">if</span> ( _.last(foundCells) == <span class="literal">null</span>){
+        foundCells = [];
+        <span class="keyword">break</span>;
+      };
+    }
+    <span class="keyword">return</span> foundCells;
+  },</pre></div></div>
             
         </li>
         
@@ -230,10 +230,10 @@ and number of cells to retrieve.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>	place: <span class="keyword">function</span>(ship){
-		<span class="keyword">this</span>.set(<span class="string">"ship"</span>, ship);
-		<span class="keyword">this</span>.set(<span class="string">"placementState"</span>, <span class="string">"deployed"</span>);
-	},</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  place: <span class="keyword">function</span>(ship){
+    <span class="keyword">this</span>.set(<span class="string">"ship"</span>, ship);
+    <span class="keyword">this</span>.set(<span class="string">"placementState"</span>, <span class="string">"deployed"</span>);
+  },</pre></div></div>
             
         </li>
         
@@ -248,15 +248,15 @@ and number of cells to retrieve.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>	strike: <span class="keyword">function</span>(){
-		<span class="keyword">var</span> ship;
-		<span class="keyword">if</span>(ship = <span class="keyword">this</span>.get(<span class="string">"ship"</span>)){
-			<span class="keyword">this</span>.set(<span class="string">"placementState"</span>, <span class="string">"hit"</span>);
-			ship.hit();
-		}<span class="keyword">else</span>{
-			<span class="keyword">this</span>.set(<span class="string">"placementState"</span>, <span class="string">"miss"</span>);
-		}
-	}
+            <div class="content"><div class='highlight'><pre>  strike: <span class="keyword">function</span>(){
+    <span class="keyword">var</span> ship;
+    <span class="keyword">if</span>(ship = <span class="keyword">this</span>.get(<span class="string">"ship"</span>)){
+      <span class="keyword">this</span>.set(<span class="string">"placementState"</span>, <span class="string">"hit"</span>);
+      ship.hit();
+    }<span class="keyword">else</span>{
+      <span class="keyword">this</span>.set(<span class="string">"placementState"</span>, <span class="string">"miss"</span>);
+    }
+  }
 })</pre></div></div>
             
         </li>
@@ -289,11 +289,11 @@ know if there&#39;s anything at that cell.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>app.models.Strikable = Backbone.Model.extend({
-	defaults: {
-		afterMath: <span class="string">""</span>,
-		isOccupied:<span class="literal">false</span>,
-		position:<span class="number">0</span>
-	},</pre></div></div>
+  defaults: {
+    afterMath: <span class="string">""</span>,
+    isOccupied:<span class="literal">false</span>,
+    position:<span class="number">0</span>
+  },</pre></div></div>
             
         </li>
         
@@ -308,14 +308,14 @@ know if there&#39;s anything at that cell.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>	strike: <span class="keyword">function</span>(){
-		<span class="keyword">if</span>(<span class="keyword">this</span>.get(<span class="string">'isOccupied'</span>)){
-			<span class="keyword">this</span>.set(<span class="string">'afterMath'</span>, <span class="string">'hit'</span>);
-		} <span class="keyword">else</span> {
-			<span class="keyword">this</span>.set(<span class="string">'afterMath'</span>, <span class="string">'miss'</span>)
-		}
-		<span class="keyword">return</span> <span class="keyword">this</span>;
-	}
+            <div class="content"><div class='highlight'><pre>  strike: <span class="keyword">function</span>(){
+    <span class="keyword">if</span>(<span class="keyword">this</span>.get(<span class="string">'isOccupied'</span>)){
+      <span class="keyword">this</span>.set(<span class="string">'afterMath'</span>, <span class="string">'hit'</span>);
+    } <span class="keyword">else</span> {
+      <span class="keyword">this</span>.set(<span class="string">'afterMath'</span>, <span class="string">'miss'</span>)
+    }
+    <span class="keyword">return</span> <span class="keyword">this</span>;
+  }
 });</pre></div></div>
             
         </li>
@@ -345,9 +345,9 @@ know if there&#39;s anything at that cell.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>app.collections.Aresenal = Backbone.Collection.extend({
-	model: app.models.Ship,
-	initialize: <span class="keyword">function</span>(){
-		<span class="keyword">var</span> self = <span class="keyword">this</span>;</pre></div></div>
+  model: app.models.Ship,
+  initialize: <span class="keyword">function</span>(){
+    <span class="keyword">var</span> self = <span class="keyword">this</span>;</pre></div></div>
             
         </li>
         
@@ -363,16 +363,16 @@ Use this to do a nice GAME OVER screen.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>		<span class="keyword">this</span>.on(<span class="string">'hit'</span>, <span class="keyword">function</span>(){
-			<span class="keyword">var</span> defeated = self.every(<span class="keyword">function</span>(ship){
-				<span class="keyword">return</span> ship.isSunk();
-			})
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">this</span>.on(<span class="string">'hit'</span>, <span class="keyword">function</span>(){
+      <span class="keyword">var</span> defeated = self.every(<span class="keyword">function</span>(ship){
+        <span class="keyword">return</span> ship.isSunk();
+      })
 
-			<span class="keyword">if</span> (defeated){
-				self.trigger(<span class="string">"destroyed"</span>, self);
-			}
-		});
-	},</pre></div></div>
+      <span class="keyword">if</span> (defeated){
+        self.trigger(<span class="string">"destroyed"</span>, self);
+      }
+    });
+  },</pre></div></div>
             
         </li>
         
@@ -387,11 +387,11 @@ Use this to do a nice GAME OVER screen.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>	remainingLives: <span class="keyword">function</span>(){
-		<span class="keyword">return</span> <span class="keyword">this</span>.reduce(<span class="keyword">function</span>(memo, obj){
-			<span class="keyword">return</span> memo + obj.get(<span class="string">'remainingLives'</span>);
-		}, <span class="number">0</span>);
-	},</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  remainingLives: <span class="keyword">function</span>(){
+    <span class="keyword">return</span> <span class="keyword">this</span>.reduce(<span class="keyword">function</span>(memo, obj){
+      <span class="keyword">return</span> memo + obj.get(<span class="string">'remainingLives'</span>);
+    }, <span class="number">0</span>);
+  },</pre></div></div>
             
         </li>
         
@@ -407,11 +407,11 @@ use this to determine if we can start the game.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>	allDeployed: <span class="keyword">function</span>(){
-		<span class="keyword">return</span> <span class="keyword">this</span>.every(<span class="keyword">function</span>(ship){
-			<span class="keyword">return</span> ship.get(<span class="string">"deployed"</span>);
-		});
-	}
+            <div class="content"><div class='highlight'><pre>  allDeployed: <span class="keyword">function</span>(){
+    <span class="keyword">return</span> <span class="keyword">this</span>.every(<span class="keyword">function</span>(ship){
+      <span class="keyword">return</span> ship.get(<span class="string">"deployed"</span>);
+    });
+  }
 });</pre></div></div>
             
         </li>
@@ -457,11 +457,11 @@ we send over to the server. In other words, it&#39;s where you tried to attack.<
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>	initialize: <span class="keyword">function</span>(){
-		<span class="keyword">this</span>.on(<span class="string">'add'</span>,<span class="keyword">function</span>(model, collection, options){
-			model.set(<span class="string">"position"</span>, options.at);
-		})
-	}
+            <div class="content"><div class='highlight'><pre>  initialize: <span class="keyword">function</span>(){
+    <span class="keyword">this</span>.on(<span class="string">'add'</span>,<span class="keyword">function</span>(model, collection, options){
+      model.set(<span class="string">"position"</span>, options.at);
+    })
+  }
 });</pre></div></div>
             
         </li>
@@ -506,7 +506,7 @@ Takes in the length of one side the grid, could be used for different layouts.</
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>	meshify: <span class="keyword">function</span>(len){</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  meshify: <span class="keyword">function</span>(len){</pre></div></div>
             
         </li>
         
@@ -521,11 +521,11 @@ Takes in the length of one side the grid, could be used for different layouts.</
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>		<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>, l = <span class="keyword">this</span>.length-<span class="number">1</span>; i &lt;= l; i++) {
-			<span class="keyword">var</span> top = <span class="keyword">this</span>.at(i-len) || <span class="literal">null</span>,
-					bottom = <span class="keyword">this</span>.at(i+len) || <span class="literal">null</span>,
-					left = <span class="keyword">this</span>.at(i-<span class="number">1</span>) || <span class="literal">null</span>,
-					right = <span class="keyword">this</span>.at(i+<span class="number">1</span>) || <span class="literal">null</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>, l = <span class="keyword">this</span>.length-<span class="number">1</span>; i &lt;= l; i++) {
+      <span class="keyword">var</span> top = <span class="keyword">this</span>.at(i-len) || <span class="literal">null</span>,
+          bottom = <span class="keyword">this</span>.at(i+len) || <span class="literal">null</span>,
+          left = <span class="keyword">this</span>.at(i-<span class="number">1</span>) || <span class="literal">null</span>,
+          right = <span class="keyword">this</span>.at(i+<span class="number">1</span>) || <span class="literal">null</span>;</pre></div></div>
             
         </li>
         
@@ -540,9 +540,9 @@ Takes in the length of one side the grid, could be used for different layouts.</
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>			<span class="keyword">if</span>(((i+<span class="number">1</span>)%len) == <span class="number">0</span>){
-				right = <span class="literal">null</span>;
-			}</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">if</span>(((i+<span class="number">1</span>)%len) == <span class="number">0</span>){
+        right = <span class="literal">null</span>;
+      }</pre></div></div>
             
         </li>
         
@@ -557,9 +557,9 @@ Takes in the length of one side the grid, could be used for different layouts.</
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>			<span class="keyword">if</span>(((i)%len) == <span class="number">0</span>){
-				left = <span class="literal">null</span>;
-			}</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">if</span>(((i)%len) == <span class="number">0</span>){
+        left = <span class="literal">null</span>;
+      }</pre></div></div>
             
         </li>
         
@@ -574,14 +574,14 @@ Takes in the length of one side the grid, could be used for different layouts.</
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>			<span class="keyword">this</span>.at(i).siblings = {
-				top: 		top,
-				right: 	right,
-				bottom: bottom,
-				left: 	left
-			};
-		};
-	},</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">this</span>.at(i).siblings = {
+        top:    top,
+        right:  right,
+        bottom: bottom,
+        left:   left
+      };
+    };
+  },</pre></div></div>
             
         </li>
         
@@ -596,10 +596,10 @@ Takes in the length of one side the grid, could be used for different layouts.</
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>	strikeAt: <span class="keyword">function</span>(index){
-		<span class="keyword">var</span> cell = <span class="keyword">this</span>.at(index);
-		cell.strike();
-	}
+            <div class="content"><div class='highlight'><pre>  strikeAt: <span class="keyword">function</span>(index){
+    <span class="keyword">var</span> cell = <span class="keyword">this</span>.at(index);
+    cell.strike();
+  }
 });</pre></div></div>
             
         </li>
@@ -630,24 +630,24 @@ strikable model&#39;s afterMath attribute.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>app.views.StrikableView = Backbone.View.extend({
-	className: <span class="string">"strikable-cell"</span>,
-	templateName: <span class="string">"strikeCellTemplate"</span>,
-	initialize: <span class="keyword">function</span>(){
-		<span class="keyword">this</span>.listenTo(<span class="keyword">this</span>.model, <span class="string">"change:afterMath"</span>, <span class="keyword">this</span>.render);
-		<span class="keyword">this</span>.parent = <span class="keyword">this</span>.options.parent;
-	},
-	events: {<span class="string">"click"</span>:<span class="string">"strike"</span>},
-	strike: <span class="keyword">function</span>(){
-		<span class="keyword">this</span>.parent.trigger(<span class="string">"strike"</span>, <span class="keyword">this</span>);
-		<span class="keyword">this</span>.model.strike();
-		<span class="keyword">this</span>.render();
-	},
-	render: <span class="keyword">function</span>(){
-		<span class="keyword">var</span> template = app.templates[<span class="keyword">this</span>.templateName];
-		<span class="keyword">this</span>.$el.removeClass(<span class="keyword">this</span>.model.previous(<span class="string">"afterMath"</span>)).addClass(<span class="keyword">this</span>.model.get(<span class="string">"afterMath"</span>));
-		<span class="keyword">this</span>.$el.html(template(<span class="keyword">this</span>.model.toJSON()));
-		<span class="keyword">return</span> <span class="keyword">this</span>;
-	}
+  className: <span class="string">"strikable-cell"</span>,
+  templateName: <span class="string">"strikeCellTemplate"</span>,
+  initialize: <span class="keyword">function</span>(){
+    <span class="keyword">this</span>.listenTo(<span class="keyword">this</span>.model, <span class="string">"change:afterMath"</span>, <span class="keyword">this</span>.render);
+    <span class="keyword">this</span>.parent = <span class="keyword">this</span>.options.parent;
+  },
+  events: {<span class="string">"click"</span>:<span class="string">"strike"</span>},
+  strike: <span class="keyword">function</span>(){
+    <span class="keyword">this</span>.parent.trigger(<span class="string">"strike"</span>, <span class="keyword">this</span>);
+    <span class="keyword">this</span>.model.strike();
+    <span class="keyword">this</span>.render();
+  },
+  render: <span class="keyword">function</span>(){
+    <span class="keyword">var</span> template = app.templates[<span class="keyword">this</span>.templateName];
+    <span class="keyword">this</span>.$el.removeClass(<span class="keyword">this</span>.model.previous(<span class="string">"afterMath"</span>)).addClass(<span class="keyword">this</span>.model.get(<span class="string">"afterMath"</span>));
+    <span class="keyword">this</span>.$el.html(template(<span class="keyword">this</span>.model.toJSON()));
+    <span class="keyword">return</span> <span class="keyword">this</span>;
+  }
 });</pre></div></div>
             
         </li>
@@ -679,8 +679,8 @@ attacks. Only this and the ShipView uses Jquery UI&#39;s draggable/droppable.</p
             </div>
             
             <div class="content"><div class='highlight'><pre>app.views.PlaceableView = Backbone.View.extend({
-	templateName:<span class="string">"placementCellTemplate"</span>,
-	initialize: <span class="keyword">function</span>(){</pre></div></div>
+  templateName:<span class="string">"placementCellTemplate"</span>,
+  initialize: <span class="keyword">function</span>(){</pre></div></div>
             
         </li>
         
@@ -695,9 +695,9 @@ attacks. Only this and the ShipView uses Jquery UI&#39;s draggable/droppable.</p
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>		<span class="keyword">this</span>.$el.droppable({ tolerance: <span class="string">"pointer"</span>});
-		<span class="keyword">this</span>.listenTo(<span class="keyword">this</span>.model, <span class="string">"change:placementState"</span>, <span class="keyword">this</span>.render);
-		<span class="keyword">this</span>.listenTo(<span class="keyword">this</span>.model, <span class="string">"change:afterMath"</span>, <span class="keyword">this</span>.render);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">this</span>.$el.droppable({ tolerance: <span class="string">"pointer"</span>});
+    <span class="keyword">this</span>.listenTo(<span class="keyword">this</span>.model, <span class="string">"change:placementState"</span>, <span class="keyword">this</span>.render);
+    <span class="keyword">this</span>.listenTo(<span class="keyword">this</span>.model, <span class="string">"change:afterMath"</span>, <span class="keyword">this</span>.render);</pre></div></div>
             
         </li>
         
@@ -713,10 +713,10 @@ the parent&#39;s events</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>		<span class="keyword">this</span>.parent = <span class="keyword">this</span>.options.parent;
-	},
-	className:<span class="string">"placement-cell"</span>,
-	events: {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">this</span>.parent = <span class="keyword">this</span>.options.parent;
+  },
+  className:<span class="string">"placement-cell"</span>,
+  events: {</pre></div></div>
             
         </li>
         
@@ -731,17 +731,17 @@ the parent&#39;s events</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>		<span class="string">"drop"</span>: <span class="keyword">function</span>(e, obj){
-			<span class="keyword">var</span> callback = obj.draggable.data(<span class="string">'callback'</span>);
-			callback ? callback(<span class="keyword">this</span>.model) : <span class="literal">false</span>;
-		}
-	},
-	render: <span class="keyword">function</span>(){
-		<span class="keyword">var</span> template = app.templates[<span class="keyword">this</span>.templateName];
-		<span class="keyword">this</span>.$el.removeClass(<span class="keyword">this</span>.model.previous(<span class="string">"placementState"</span>)).addClass(<span class="keyword">this</span>.model.get(<span class="string">"placementState"</span>));
-		<span class="keyword">this</span>.$el.html(template(<span class="keyword">this</span>.model.toJSON()));
-		<span class="keyword">return</span> <span class="keyword">this</span>;
-	}
+            <div class="content"><div class='highlight'><pre>    <span class="string">"drop"</span>: <span class="keyword">function</span>(e, obj){
+      <span class="keyword">var</span> callback = obj.draggable.data(<span class="string">'callback'</span>);
+      callback ? callback(<span class="keyword">this</span>.model) : <span class="literal">false</span>;
+    }
+  },
+  render: <span class="keyword">function</span>(){
+    <span class="keyword">var</span> template = app.templates[<span class="keyword">this</span>.templateName];
+    <span class="keyword">this</span>.$el.removeClass(<span class="keyword">this</span>.model.previous(<span class="string">"placementState"</span>)).addClass(<span class="keyword">this</span>.model.get(<span class="string">"placementState"</span>));
+    <span class="keyword">this</span>.$el.html(template(<span class="keyword">this</span>.model.toJSON()));
+    <span class="keyword">return</span> <span class="keyword">this</span>;
+  }
 });</pre></div></div>
             
         </li>
@@ -772,16 +772,16 @@ and meshifying it&#39;s collection.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>app.views.PlaceablesView = Backbone.View.extend({
-	childView: app.views.PlaceableView,
-	initialize: <span class="keyword">function</span>(){
-		<span class="keyword">var</span> self = <span class="keyword">this</span>;
-		<span class="keyword">this</span>.collection.each(<span class="keyword">function</span>(obj){
-			<span class="keyword">var</span> child = <span class="keyword">new</span> self.childView({
-				model: obj,
-				parent:self
-			});
-			self.$el.append(child.render().el);
-		});</pre></div></div>
+  childView: app.views.PlaceableView,
+  initialize: <span class="keyword">function</span>(){
+    <span class="keyword">var</span> self = <span class="keyword">this</span>;
+    <span class="keyword">this</span>.collection.each(<span class="keyword">function</span>(obj){
+      <span class="keyword">var</span> child = <span class="keyword">new</span> self.childView({
+        model: obj,
+        parent:self
+      });
+      self.$el.append(child.render().el);
+    });</pre></div></div>
             
         </li>
         
@@ -796,8 +796,8 @@ and meshifying it&#39;s collection.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>		<span class="keyword">this</span>.collection.meshify(<span class="number">10</span>);
-	}
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">this</span>.collection.meshify(<span class="number">10</span>);
+  }
 });</pre></div></div>
             
         </li>
@@ -828,17 +828,17 @@ A reference to the parent is set on all child views.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>app.views.StrikablesView = Backbone.View.extend({
-	childView: app.views.StrikableView,
-	initialize: <span class="keyword">function</span>(){
-		<span class="keyword">var</span> self = <span class="keyword">this</span>;
-		<span class="keyword">this</span>.collection.each(<span class="keyword">function</span>(obj){
-			<span class="keyword">var</span> child = <span class="keyword">new</span> self.childView({
-				model: obj,
-				parent: self
-			});
-			self.$el.append(child.render().el);
-		});
-	}
+  childView: app.views.StrikableView,
+  initialize: <span class="keyword">function</span>(){
+    <span class="keyword">var</span> self = <span class="keyword">this</span>;
+    <span class="keyword">this</span>.collection.each(<span class="keyword">function</span>(obj){
+      <span class="keyword">var</span> child = <span class="keyword">new</span> self.childView({
+        model: obj,
+        parent: self
+      });
+      self.$el.append(child.render().el);
+    });
+  }
 });</pre></div></div>
             
         </li>
@@ -869,13 +869,13 @@ A reference to the parent is set on all child views.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>app.views.ShipLotView = Backbone.View.extend({
-	initialize: <span class="keyword">function</span>(){
-		<span class="keyword">this</span>.handleView =  <span class="keyword">new</span> app.views.ShipView({model: <span class="keyword">this</span>.model});
-		<span class="keyword">this</span>.controlView = <span class="keyword">new</span> app.views.ShipControl({model: <span class="keyword">this</span>.model});
+  initialize: <span class="keyword">function</span>(){
+    <span class="keyword">this</span>.handleView =  <span class="keyword">new</span> app.views.ShipView({model: <span class="keyword">this</span>.model});
+    <span class="keyword">this</span>.controlView = <span class="keyword">new</span> app.views.ShipControl({model: <span class="keyword">this</span>.model});
 
-		<span class="keyword">this</span>.$el.append(<span class="keyword">this</span>.handleView.render().el);
-		<span class="keyword">this</span>.$el.append(<span class="keyword">this</span>.controlView.render().el);
-	}
+    <span class="keyword">this</span>.$el.append(<span class="keyword">this</span>.handleView.render().el);
+    <span class="keyword">this</span>.$el.append(<span class="keyword">this</span>.controlView.render().el);
+  }
 });</pre></div></div>
             
         </li>
@@ -905,19 +905,19 @@ A reference to the parent is set on all child views.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>app.views.AresenalView = Backbone.View.extend({
-	el: <span class="string">"#ships"</span>,
-	childView: app.views.ShipLotView,
-	initialize: <span class="keyword">function</span>(){
-		<span class="keyword">var</span> self = <span class="keyword">this</span>;
-		<span class="keyword">this</span>.shipLotViews=[];
-		<span class="keyword">this</span>.collection.each(<span class="keyword">function</span>(ship){
-			<span class="keyword">var</span> view = <span class="keyword">new</span> self.childView({
-				model: ship
-			});
-			self.shipLotViews.push(view);
-			self.$el.append(view.render().el);
-		})
-	},</pre></div></div>
+  el: <span class="string">"#ships"</span>,
+  childView: app.views.ShipLotView,
+  initialize: <span class="keyword">function</span>(){
+    <span class="keyword">var</span> self = <span class="keyword">this</span>;
+    <span class="keyword">this</span>.shipLotViews=[];
+    <span class="keyword">this</span>.collection.each(<span class="keyword">function</span>(ship){
+      <span class="keyword">var</span> view = <span class="keyword">new</span> self.childView({
+        model: ship
+      });
+      self.shipLotViews.push(view);
+      self.$el.append(view.render().el);
+    })
+  },</pre></div></div>
             
         </li>
         
@@ -933,9 +933,9 @@ Use it for when the game starts so that the player doesn&#39;t move its ships.</
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>	disableHandles: <span class="keyword">function</span>(){
-		<span class="keyword">this</span>.$el.find(<span class="string">".ui-draggable"</span>).draggable(<span class="string">'disable'</span>);
-	}
+            <div class="content"><div class='highlight'><pre>  disableHandles: <span class="keyword">function</span>(){
+    <span class="keyword">this</span>.$el.find(<span class="string">".ui-draggable"</span>).draggable(<span class="string">'disable'</span>);
+  }
 });</pre></div></div>
             
         </li>
@@ -965,28 +965,28 @@ Use it for when the game starts so that the player doesn&#39;t move its ships.</
             </div>
             
             <div class="content"><div class='highlight'><pre>app.views.ShipControl = Backbone.View.extend({
-	className: <span class="string">"control"</span>,
-	templateName: <span class="string">"shipLotTemplate"</span>,
-	initialize: <span class="keyword">function</span>(){
-		<span class="keyword">this</span>.render();
-		<span class="keyword">this</span>.listenTo(<span class="keyword">this</span>.model, <span class="string">"change"</span>, <span class="keyword">this</span>.render);
-	},
-	render: <span class="keyword">function</span>(){
-		<span class="keyword">var</span> template = app.templates[<span class="keyword">this</span>.templateName];
-		<span class="keyword">this</span>.$el.html(template(<span class="keyword">this</span>.presenter()));
-		<span class="keyword">return</span> <span class="keyword">this</span>;
-	},
-	presenter: <span class="keyword">function</span>(){
-		<span class="keyword">var</span> defaultPresenter = <span class="keyword">this</span>.model.toJSON(),
-		lifeMarks = [],
-		lives = defaultPresenter.remainingLives;
+  className: <span class="string">"control"</span>,
+  templateName: <span class="string">"shipLotTemplate"</span>,
+  initialize: <span class="keyword">function</span>(){
+    <span class="keyword">this</span>.render();
+    <span class="keyword">this</span>.listenTo(<span class="keyword">this</span>.model, <span class="string">"change"</span>, <span class="keyword">this</span>.render);
+  },
+  render: <span class="keyword">function</span>(){
+    <span class="keyword">var</span> template = app.templates[<span class="keyword">this</span>.templateName];
+    <span class="keyword">this</span>.$el.html(template(<span class="keyword">this</span>.presenter()));
+    <span class="keyword">return</span> <span class="keyword">this</span>;
+  },
+  presenter: <span class="keyword">function</span>(){
+    <span class="keyword">var</span> defaultPresenter = <span class="keyword">this</span>.model.toJSON(),
+    lifeMarks = [],
+    lives = defaultPresenter.remainingLives;
 
-		<span class="keyword">while</span>(lives--){
-			lifeMarks.push(<span class="string">"-"</span>);
-		}
+    <span class="keyword">while</span>(lives--){
+      lifeMarks.push(<span class="string">"-"</span>);
+    }
 
-		<span class="keyword">return</span> 	_.extend(defaultPresenter, {lifeMarks:lifeMarks});
-	}
+    <span class="keyword">return</span>  _.extend(defaultPresenter, {lifeMarks:lifeMarks});
+  }
 });</pre></div></div>
             
         </li>
@@ -1017,8 +1017,8 @@ acting as a  draggable element.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>app.views.ShipView = Backbone.View.extend({
-	className:<span class="string">"ship-cell"</span>,
-	templateName:<span class="string">"shipTemplate"</span>,</pre></div></div>
+  className:<span class="string">"ship-cell"</span>,
+  templateName:<span class="string">"shipTemplate"</span>,</pre></div></div>
             
         </li>
         
@@ -1033,9 +1033,9 @@ acting as a  draggable element.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>	orientationOnMap:<span class="string">"right"</span>,
-	initialize: <span class="keyword">function</span>(){
-		<span class="keyword">this</span>.occupiedCells = [];</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  orientationOnMap:<span class="string">"right"</span>,
+  initialize: <span class="keyword">function</span>(){
+    <span class="keyword">this</span>.occupiedCells = [];</pre></div></div>
             
         </li>
         
@@ -1050,13 +1050,13 @@ acting as a  draggable element.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>		<span class="keyword">this</span>.$el.draggable({
-			snap: <span class="string">".placement-cell"</span>,
-			snapMode: <span class="string">"inner"</span>,
-			snapTolerance: <span class="number">25</span>
-		});
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">this</span>.$el.draggable({
+      snap: <span class="string">".placement-cell"</span>,
+      snapMode: <span class="string">"inner"</span>,
+      snapTolerance: <span class="number">25</span>
+    });
 
-		<span class="keyword">this</span>.listenTo(<span class="keyword">this</span>.model, <span class="string">"change"</span>, <span class="keyword">this</span>.render);</pre></div></div>
+    <span class="keyword">this</span>.listenTo(<span class="keyword">this</span>.model, <span class="string">"change"</span>, <span class="keyword">this</span>.render);</pre></div></div>
             
         </li>
         
@@ -1072,20 +1072,20 @@ the placement cell knows lesss about the ShipView.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>		<span class="keyword">this</span>.$el.data(<span class="string">'callback'</span>, _.bind(<span class="keyword">this</span>.attachShip, <span class="keyword">this</span>));
-		<span class="keyword">this</span>.$el.on(<span class="string">'drag'</span>, <span class="keyword">this</span>.detachShip);
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">this</span>.$el.data(<span class="string">'callback'</span>, _.bind(<span class="keyword">this</span>.attachShip, <span class="keyword">this</span>));
+    <span class="keyword">this</span>.$el.on(<span class="string">'drag'</span>, <span class="keyword">this</span>.detachShip);
 
-		<span class="keyword">this</span>.template = <span class="keyword">this</span>.options.template;
-	},
-	events: {
-		<span class="string">"click .toggle"</span>: <span class="string">"pivotShip"</span>,
-		<span class="string">"drag"</span>:<span class="string">"detachShip"</span>
-	},
-	render: <span class="keyword">function</span>(){
-		<span class="keyword">var</span> template = app.templates[<span class="keyword">this</span>.templateName];
-		<span class="keyword">this</span>.$el.html(template(<span class="keyword">this</span>.presenter())) ;
-		<span class="keyword">return</span> <span class="keyword">this</span>;
-	},</pre></div></div>
+    <span class="keyword">this</span>.template = <span class="keyword">this</span>.options.template;
+  },
+  events: {
+    <span class="string">"click .toggle"</span>: <span class="string">"pivotShip"</span>,
+    <span class="string">"drag"</span>:<span class="string">"detachShip"</span>
+  },
+  render: <span class="keyword">function</span>(){
+    <span class="keyword">var</span> template = app.templates[<span class="keyword">this</span>.templateName];
+    <span class="keyword">this</span>.$el.html(template(<span class="keyword">this</span>.presenter())) ;
+    <span class="keyword">return</span> <span class="keyword">this</span>;
+  },</pre></div></div>
             
         </li>
         
@@ -1100,14 +1100,14 @@ the placement cell knows lesss about the ShipView.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>	pivotShip: <span class="keyword">function</span>(e){
-		e.preventDefault();
-		<span class="keyword">this</span>.orientationOnMap = <span class="keyword">this</span>.orientationOnMap == <span class="string">"right"</span> ? <span class="string">"bottom"</span> : <span class="string">"right"</span>;
-		<span class="keyword">if</span>(_.isEmpty(<span class="keyword">this</span>.occupiedCells)) <span class="keyword">return</span> <span class="literal">false</span>;
-		<span class="keyword">var</span> head = <span class="keyword">this</span>.occupiedCells[<span class="number">0</span>];
-		<span class="keyword">this</span>.detachShip();
-		<span class="keyword">this</span>.attachShip(head, <span class="keyword">this</span>.orientationOnMap);
-	},</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  pivotShip: <span class="keyword">function</span>(e){
+    e.preventDefault();
+    <span class="keyword">this</span>.orientationOnMap = <span class="keyword">this</span>.orientationOnMap == <span class="string">"right"</span> ? <span class="string">"bottom"</span> : <span class="string">"right"</span>;
+    <span class="keyword">if</span>(_.isEmpty(<span class="keyword">this</span>.occupiedCells)) <span class="keyword">return</span> <span class="literal">false</span>;
+    <span class="keyword">var</span> head = <span class="keyword">this</span>.occupiedCells[<span class="number">0</span>];
+    <span class="keyword">this</span>.detachShip();
+    <span class="keyword">this</span>.attachShip(head, <span class="keyword">this</span>.orientationOnMap);
+  },</pre></div></div>
             
         </li>
         
@@ -1123,16 +1123,16 @@ to the ship.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>	detachShip: <span class="keyword">function</span>(){
-		<span class="keyword">if</span>(_.isEmpty(<span class="keyword">this</span>.occupiedCells)) <span class="keyword">return</span> <span class="keyword">this</span>;
+            <div class="content"><div class='highlight'><pre>  detachShip: <span class="keyword">function</span>(){
+    <span class="keyword">if</span>(_.isEmpty(<span class="keyword">this</span>.occupiedCells)) <span class="keyword">return</span> <span class="keyword">this</span>;
 
-		_.each(<span class="keyword">this</span>.occupiedCells, <span class="keyword">function</span>(cell){
-			cell.set(<span class="string">'ship'</span>, <span class="literal">null</span>);
-			cell.set(<span class="string">'placementState'</span>, <span class="string">""</span>);
-		})
-		<span class="keyword">this</span>.occupiedCells = [];
-		<span class="keyword">this</span>.model.set(<span class="string">"deployed"</span>, <span class="literal">false</span>);
-	},</pre></div></div>
+    _.each(<span class="keyword">this</span>.occupiedCells, <span class="keyword">function</span>(cell){
+      cell.set(<span class="string">'ship'</span>, <span class="literal">null</span>);
+      cell.set(<span class="string">'placementState'</span>, <span class="string">""</span>);
+    })
+    <span class="keyword">this</span>.occupiedCells = [];
+    <span class="keyword">this</span>.model.set(<span class="string">"deployed"</span>, <span class="literal">false</span>);
+  },</pre></div></div>
             
         </li>
         
@@ -1147,9 +1147,9 @@ to the ship.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>	disableDrag: <span class="keyword">function</span>(){
-		<span class="keyword">this</span>.$el.draggable(<span class="string">"disable"</span>);
-	},</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  disableDrag: <span class="keyword">function</span>(){
+    <span class="keyword">this</span>.$el.draggable(<span class="string">"disable"</span>);
+  },</pre></div></div>
             
         </li>
         
@@ -1165,10 +1165,10 @@ an already placed ship.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>	attachShip: <span class="keyword">function</span>(cell, direction){
-		direction = direction || <span class="keyword">this</span>.orientationOnMap;
-		<span class="keyword">var</span> self = <span class="keyword">this</span>;
-		<span class="keyword">var</span> cells = cell.andAdjacentCells(<span class="keyword">this</span>.model.get(<span class="string">'length'</span>), direction);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  attachShip: <span class="keyword">function</span>(cell, direction){
+    direction = direction || <span class="keyword">this</span>.orientationOnMap;
+    <span class="keyword">var</span> self = <span class="keyword">this</span>;
+    <span class="keyword">var</span> cells = cell.andAdjacentCells(<span class="keyword">this</span>.model.get(<span class="string">'length'</span>), direction);</pre></div></div>
             
         </li>
         
@@ -1183,29 +1183,29 @@ an already placed ship.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>		<span class="keyword">var</span> isCollision = !!_.find(cells, <span class="keyword">function</span>(cell){
-			<span class="keyword">return</span> !!cell.get(<span class="string">"ship"</span>);
-		});
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> isCollision = !!_.find(cells, <span class="keyword">function</span>(cell){
+      <span class="keyword">return</span> !!cell.get(<span class="string">"ship"</span>);
+    });
 
-		<span class="keyword">if</span> (isCollision){
-			<span class="keyword">this</span>.trigger(<span class="string">'collided'</span>, <span class="keyword">this</span>);
-			<span class="keyword">return</span> <span class="literal">false</span>;
-		}
+    <span class="keyword">if</span> (isCollision){
+      <span class="keyword">this</span>.trigger(<span class="string">'collided'</span>, <span class="keyword">this</span>);
+      <span class="keyword">return</span> <span class="literal">false</span>;
+    }
 
-		<span class="keyword">this</span>.occupiedCells = cells;
-		<span class="keyword">var</span> self = <span class="keyword">this</span>;
-		_.each(cells, <span class="keyword">function</span>(cell){
-			cell.place(self.model);
-		});
+    <span class="keyword">this</span>.occupiedCells = cells;
+    <span class="keyword">var</span> self = <span class="keyword">this</span>;
+    _.each(cells, <span class="keyword">function</span>(cell){
+      cell.place(self.model);
+    });
 
-		self.model.set(<span class="string">"deployed"</span>, <span class="literal">true</span>);
-	},
-	presenter: <span class="keyword">function</span>(){
-		<span class="keyword">var</span> defaultPresenter = <span class="keyword">this</span>.model.toJSON();
-		<span class="keyword">return</span> _.extend(defaultPresenter, {
-			shipMarker : defaultPresenter.shipType.charAt(<span class="number">0</span>)
-		});
-	}
+    self.model.set(<span class="string">"deployed"</span>, <span class="literal">true</span>);
+  },
+  presenter: <span class="keyword">function</span>(){
+    <span class="keyword">var</span> defaultPresenter = <span class="keyword">this</span>.model.toJSON();
+    <span class="keyword">return</span> _.extend(defaultPresenter, {
+      shipMarker : defaultPresenter.shipType.charAt(<span class="number">0</span>)
+    });
+  }
 });</pre></div></div>
             
         </li>
@@ -1236,28 +1236,28 @@ all ships have been deployed.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>app.views.GameStatsView = Backbone.View.extend({
-	templateName:<span class="string">"gameStatsTemplate"</span>,
-	el: <span class="string">"#game-stats"</span>,
-	events: {
-		<span class="string">"click .start"</span>: <span class="keyword">function</span>(e){
-			e.preventDefault();
-			app.startGame();
-		}
-	},
-	initialize: <span class="keyword">function</span>(){
-		<span class="keyword">this</span>.listenTo(<span class="keyword">this</span>.collection, <span class="string">"change"</span>, <span class="keyword">this</span>.render);
-		<span class="keyword">this</span>.render();
-	},
-	render: <span class="keyword">function</span>(){
-		<span class="keyword">var</span> template = app.templates[<span class="keyword">this</span>.templateName];
-		<span class="keyword">this</span>.$el.html(template(<span class="keyword">this</span>.presenter()));
-	},
-	presenter: <span class="keyword">function</span>(){
-		<span class="keyword">return</span> {
-			remainingLives: <span class="keyword">this</span>.collection.remainingLives(),
-			allDeployed: <span class="keyword">this</span>.collection.allDeployed()
-		}
-	}
+  templateName:<span class="string">"gameStatsTemplate"</span>,
+  el: <span class="string">"#game-stats"</span>,
+  events: {
+    <span class="string">"click .start"</span>: <span class="keyword">function</span>(e){
+      e.preventDefault();
+      app.startGame();
+    }
+  },
+  initialize: <span class="keyword">function</span>(){
+    <span class="keyword">this</span>.listenTo(<span class="keyword">this</span>.collection, <span class="string">"change"</span>, <span class="keyword">this</span>.render);
+    <span class="keyword">this</span>.render();
+  },
+  render: <span class="keyword">function</span>(){
+    <span class="keyword">var</span> template = app.templates[<span class="keyword">this</span>.templateName];
+    <span class="keyword">this</span>.$el.html(template(<span class="keyword">this</span>.presenter()));
+  },
+  presenter: <span class="keyword">function</span>(){
+    <span class="keyword">return</span> {
+      remainingLives: <span class="keyword">this</span>.collection.remainingLives(),
+      allDeployed: <span class="keyword">this</span>.collection.allDeployed()
+    }
+  }
 });</pre></div></div>
             
         </li>
@@ -1287,13 +1287,13 @@ all ships have been deployed.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>app.messages={
-	<span class="string">"closecall"</span>: <span class="string">"That was close"</span>,
-	<span class="string">"imhit"</span>:<span class="string">"I'm Hit!"</span>,
-	<span class="string">"deply"</span>:<span class="string">"Yessir deploying nowww.."</span>,
-	<span class="string">"collision"</span>:<span class="string">"Nope don't want to go there.."</span>,
-	<span class="string">"pivot"</span>:<span class="string">"turning..."</span>,
-	<span class="string">"sunk"</span>:<span class="string">"never lose hope.."</span>,
-	<span class="string">"gameover"</span>:<span class="string">"You losee"</span>
+  <span class="string">"closecall"</span>: <span class="string">"That was close"</span>,
+  <span class="string">"imhit"</span>:<span class="string">"I'm Hit!"</span>,
+  <span class="string">"deply"</span>:<span class="string">"Yessir deploying nowww.."</span>,
+  <span class="string">"collision"</span>:<span class="string">"Nope don't want to go there.."</span>,
+  <span class="string">"pivot"</span>:<span class="string">"turning..."</span>,
+  <span class="string">"sunk"</span>:<span class="string">"never lose hope.."</span>,
+  <span class="string">"gameover"</span>:<span class="string">"You losee"</span>
 }</pre></div></div>
             
         </li>
@@ -1323,11 +1323,11 @@ all ships have been deployed.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>app.buildTemplates = <span class="keyword">function</span>(){
-	app.templates.strikeCellTemplate = Mustache.compile($(<span class="string">"#strikeCellTemplate"</span>).html());
-	app.templates.placementCellTemplate = Mustache.compile($(<span class="string">"#placementCellTemplate"</span>).html());
-	app.templates.shipTemplate = Mustache.compile($(<span class="string">"#shipTemplate"</span>).html());
-	app.templates.shipLotTemplate = Mustache.compile($(<span class="string">"#shipLotTemplate"</span>).html());
-	app.templates.gameStatsTemplate = Mustache.compile($(<span class="string">"#gameStatsTemplate"</span>).html());
+  app.templates.strikeCellTemplate = Mustache.compile($(<span class="string">"#strikeCellTemplate"</span>).html());
+  app.templates.placementCellTemplate = Mustache.compile($(<span class="string">"#placementCellTemplate"</span>).html());
+  app.templates.shipTemplate = Mustache.compile($(<span class="string">"#shipTemplate"</span>).html());
+  app.templates.shipLotTemplate = Mustache.compile($(<span class="string">"#shipLotTemplate"</span>).html());
+  app.templates.gameStatsTemplate = Mustache.compile($(<span class="string">"#gameStatsTemplate"</span>).html());
 };</pre></div></div>
             
         </li>
@@ -1344,27 +1344,27 @@ all ships have been deployed.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>app.buildCollections = <span class="keyword">function</span>(){
-	app.strikables = <span class="keyword">new</span> app.collections.Strikables([],{
-		model:app.models.Strikable
-	});
+  app.strikables = <span class="keyword">new</span> app.collections.Strikables([],{
+    model:app.models.Strikable
+  });
 
-	app.placeables = <span class="keyword">new</span> app.collections.Placeables([],{
-		model:app.models.Placeable
-	});
+  app.placeables = <span class="keyword">new</span> app.collections.Placeables([],{
+    model:app.models.Placeable
+  });
 
-	<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">100</span>; i ; i--) {
-		app.strikables.push({});
-		app.placeables.push({});
-	};
+  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">100</span>; i ; i--) {
+    app.strikables.push({});
+    app.placeables.push({});
+  };
 
-	app.aresenal = <span class="keyword">new</span> app.collections.Aresenal([{
-		length:<span class="number">3</span>,
-		shipType:<span class="string">"BattleShip"</span>
-	},
-	{
-		length:<span class="number">2</span>,
-		shipType:<span class="string">"PatrolBoat"</span>
-	}]);
+  app.aresenal = <span class="keyword">new</span> app.collections.Aresenal([{
+    length:<span class="number">3</span>,
+    shipType:<span class="string">"BattleShip"</span>
+  },
+  {
+    length:<span class="number">2</span>,
+    shipType:<span class="string">"PatrolBoat"</span>
+  }]);
 };</pre></div></div>
             
         </li>
@@ -1381,15 +1381,15 @@ all ships have been deployed.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>app.buildBattleField = <span class="keyword">function</span>(){
-	app.placeableMap = <span class="keyword">new</span> app.views.PlaceablesView({
-		el:<span class="string">"#board"</span>,
-		collection: app.placeables
-	});
+  app.placeableMap = <span class="keyword">new</span> app.views.PlaceablesView({
+    el:<span class="string">"#board"</span>,
+    collection: app.placeables
+  });
 
-	app.strikableMap = <span class="keyword">new</span> app.views.StrikablesView({
-		el:<span class="string">'#st_board'</span>,
-		collection: app.strikables
-	});
+  app.strikableMap = <span class="keyword">new</span> app.views.StrikablesView({
+    el:<span class="string">'#st_board'</span>,
+    collection: app.strikables
+  });
 }</pre></div></div>
             
         </li>
@@ -1406,17 +1406,17 @@ all ships have been deployed.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>app.initialize = <span class="keyword">function</span>(){
-	app.buildTemplates();
-	app.buildCollections();
-	app.buildBattleField();
+  app.buildTemplates();
+  app.buildCollections();
+  app.buildBattleField();
 
-	app.aresenalView = <span class="keyword">new</span> app.views.AresenalView({
-		collection: app.aresenal
-	});
+  app.aresenalView = <span class="keyword">new</span> app.views.AresenalView({
+    collection: app.aresenal
+  });
 
-	app.gameStats = <span class="keyword">new</span> app.views.GameStatsView({
-		collection: app.aresenal
-	});
+  app.gameStats = <span class="keyword">new</span> app.views.GameStatsView({
+    collection: app.aresenal
+  });
 }</pre></div></div>
             
         </li>
@@ -1433,16 +1433,16 @@ all ships have been deployed.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>app.startGame = <span class="keyword">function</span>(){
-	<span class="keyword">if</span> (app.aresenal.allDeployed()){
-		app.aresenalView.disableHandles();
-	}
+  <span class="keyword">if</span> (app.aresenal.allDeployed()){
+    app.aresenalView.disableHandles();
+  }
 
-	<span class="keyword">var</span> locations = app.placeableMap.collection.reduce(<span class="keyword">function</span>(memo, cell, index){
-		<span class="keyword">if</span>(cell.get(<span class="string">"ship"</span>)){
-			memo.push(index);
-		}
-		<span class="keyword">return</span> memo;
-	},[]);</pre></div></div>
+  <span class="keyword">var</span> locations = app.placeableMap.collection.reduce(<span class="keyword">function</span>(memo, cell, index){
+    <span class="keyword">if</span>(cell.get(<span class="string">"ship"</span>)){
+      memo.push(index);
+    }
+    <span class="keyword">return</span> memo;
+  },[]);</pre></div></div>
             
         </li>
         
@@ -1457,17 +1457,17 @@ all ships have been deployed.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>	_.each(locations, <span class="keyword">function</span>(i){
-		app.strikables.at(i).set(<span class="string">'isOccupied'</span>, <span class="literal">true</span>);
-	});
+            <div class="content"><div class='highlight'><pre>  _.each(locations, <span class="keyword">function</span>(i){
+    app.strikables.at(i).set(<span class="string">'isOccupied'</span>, <span class="literal">true</span>);
+  });
 
-	app.strikableMap.on(<span class="string">'strike'</span>, <span class="keyword">function</span>(cell){
-		app.placeableMap.collection.strikeAt(cell.model.get(<span class="string">"position"</span>));
-	});
+  app.strikableMap.on(<span class="string">'strike'</span>, <span class="keyword">function</span>(cell){
+    app.placeableMap.collection.strikeAt(cell.model.get(<span class="string">"position"</span>));
+  });
 }
 
 $(<span class="keyword">function</span>(){
-	app.initialize();
+  app.initialize();
 })</pre></div></div>
             
         </li>
