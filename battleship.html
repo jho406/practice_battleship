@@ -1,0 +1,109 @@
+<html>
+<head>
+	<title></title>
+	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone.js"></script>
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/mustache.js/0.7.2/mustache.min.js"></script>
+
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+
+	<script type="text/mustache" id="placementCellTemplate">
+		{{placementState}}
+	</script>
+	<script type="text/mustache" id="strikeCellTemplate">
+		{{afterMath}}
+	</script>
+	<script type="text/mustache" id="shipLotTemplate">
+	{{shipType}} 			{{#lifeMarks}}
+				<span class="life-mark"></span>
+			{{/lifeMarks}}
+
+	</script>
+	<script type="text/mustache" id="shipTemplate">
+	{{shipMarker}} <a href="#" class="toggle">pivot</a>
+	</script>
+	<script type="text/mustache" id="gameStatsTemplate">
+		remaining lives: {{remainingLives}}
+		{{#allDeployed}}
+		<a href="#" class="start">Click To Start</a>
+		{{/allDeployed}}
+	</script>
+	<script src="battleship.js"></script>
+	<style type="text/css">
+		body{
+			font-family: arial, serif;
+		}
+		.life-mark{
+			width: 20px;
+			height: 20px;
+			line-height: 20px;
+			display: inline-block;
+			background: #ccc;
+			border-radius: 5px;
+		}
+		#board, #st_board{
+			width: 500px;
+			float: left;
+			color: white;
+			text-align: center;
+		}
+		#board{
+			width: 500px;
+			float: right;
+		}
+		.placement-cell, .strikable-cell{
+			width: 48px;
+			height: 48px;
+			line-height: 48px;
+			float: left;
+			/*display: inline-block;*/
+		}
+		.ship-cell{
+			width: 33px;
+			height: 33px;
+			/*color: white;*/
+			text-align: center;
+			font-size: 20px;
+			line-height: 18px;
+			/*padding-top: 3px;*/
+			border-radius: 5px;
+			border: 10px solid black;
+			display: inline-block;
+		}
+		.ship-cell a{
+			font-size: 10px;
+		}
+		.strikable-cell{
+			background: rgba(145, 100, 193, 1.0);
+			border-radius: 5px;
+			border: 1px solid white;
+		}
+		.placement-cell{
+			background:rgba(2, 118, 183, 1.0);
+			border-radius: 5px;
+			border: 1px solid white;
+		}
+		#ships{
+			float: left;
+			margin-left: 90px;
+		}
+		.highlight{
+			background: red;
+		}
+
+	</style>
+</head>
+<body>
+	<div id="st_board">
+	</div>
+
+
+	<div id="board">
+	</div>
+
+	<div id="ships"></div>
+	<div id="game-stats"></div>
+
+</body>
+</html>
