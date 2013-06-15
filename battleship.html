@@ -1,109 +1,1478 @@
+<!DOCTYPE html>
+
 <html>
 <head>
-	<title></title>
-	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-	<script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
-	<script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone.js"></script>
-	<script src="http://cdnjs.cloudflare.com/ajax/libs/mustache.js/0.7.2/mustache.min.js"></script>
-
-	<script src="http://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-
-	<script type="text/mustache" id="placementCellTemplate">
-		{{placementState}}
-	</script>
-	<script type="text/mustache" id="strikeCellTemplate">
-		{{afterMath}}
-	</script>
-	<script type="text/mustache" id="shipLotTemplate">
-	{{shipType}} 			{{#lifeMarks}}
-				<span class="life-mark"></span>
-			{{/lifeMarks}}
-
-	</script>
-	<script type="text/mustache" id="shipTemplate">
-	{{shipMarker}} <a href="#" class="toggle">pivot</a>
-	</script>
-	<script type="text/mustache" id="gameStatsTemplate">
-		remaining lives: {{remainingLives}}
-		{{#allDeployed}}
-		<a href="#" class="start">Click To Start</a>
-		{{/allDeployed}}
-	</script>
-	<script src="battleship.js"></script>
-	<style type="text/css">
-		body{
-			font-family: arial, serif;
-		}
-		.life-mark{
-			width: 20px;
-			height: 20px;
-			line-height: 20px;
-			display: inline-block;
-			background: #ccc;
-			border-radius: 5px;
-		}
-		#board, #st_board{
-			width: 500px;
-			float: left;
-			color: white;
-			text-align: center;
-		}
-		#board{
-			width: 500px;
-			float: right;
-		}
-		.placement-cell, .strikable-cell{
-			width: 48px;
-			height: 48px;
-			line-height: 48px;
-			float: left;
-			/*display: inline-block;*/
-		}
-		.ship-cell{
-			width: 33px;
-			height: 33px;
-			/*color: white;*/
-			text-align: center;
-			font-size: 20px;
-			line-height: 18px;
-			/*padding-top: 3px;*/
-			border-radius: 5px;
-			border: 10px solid black;
-			display: inline-block;
-		}
-		.ship-cell a{
-			font-size: 10px;
-		}
-		.strikable-cell{
-			background: rgba(145, 100, 193, 1.0);
-			border-radius: 5px;
-			border: 1px solid white;
-		}
-		.placement-cell{
-			background:rgba(2, 118, 183, 1.0);
-			border-radius: 5px;
-			border: 1px solid white;
-		}
-		#ships{
-			float: left;
-			margin-left: 90px;
-		}
-		.highlight{
-			background: red;
-		}
-
-	</style>
+  <title>battleship.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
 </head>
 <body>
-	<div id="st_board">
-	</div>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>battleship.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <pre><code>mehh Battleship against yourself.
+This is a battleship practice app I made to learn backbone.
+There&#39;s no backend, and you can only play against yourself.</code></pre>
+<p>Default namespaces for the app.</p>
 
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="keyword">var</span> app = {
+  views: {},
+  models: {},
+  collections: {},
+  templates: {}
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <h2>models.Ship</h2>
 
-	<div id="board">
-	</div>
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Represents a battleship</p>
 
-	<div id="ships"></div>
-	<div id="game-stats"></div>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>app.models.Ship = Backbone.Model.extend({
+  initialize: <span class="keyword">function</span>(attr){
+    <span class="keyword">this</span>.set(<span class="string">'remainingLives'</span>, attr.length, {silent: <span class="literal">true</span>});
+  },
+  defaults: {
+    deployed: <span class="literal">false</span>
+  },
+  isSunk: <span class="keyword">function</span>(){
+    <span class="keyword">return</span> <span class="keyword">this</span>.get(<span class="string">"remainingLives"</span>) &lt;= <span class="number">0</span>;
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Attacks the shit and decrements remaining lives and fires a hit event</p>
 
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  hit: <span class="keyword">function</span>(){
+    <span class="keyword">var</span> numOfLives = <span class="keyword">this</span>.get(<span class="string">"remainingLives"</span>);
+    <span class="keyword">this</span>.set(<span class="string">"remainingLives"</span>, numOfLives-<span class="number">1</span>);
+
+    <span class="keyword">this</span>.trigger(<span class="string">"hit"</span>, <span class="keyword">this</span>);
+
+    <span class="keyword">if</span> (<span class="keyword">this</span>.isSunk()){
+      <span class="keyword">this</span>.trigger(<span class="string">"sunk"</span>, <span class="keyword">this</span>);
+    }
+
+    <span class="keyword">return</span> <span class="keyword">this</span>;
+  }
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <h2>models.Placeable</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Placeable is the model that backs a placeable view (where you place your ship).
+It&#39;s where you place your ships and where your opponent attacks.
+Placeable also hold a reference to a ship. For example, if there&#39;s a ship
+with a length of 3, then there would be 3 placeables pointing to that ship.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>app.models.Placeable = Backbone.Model.extend({
+  defaults: {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>The placement state can &quot;occupied&quot;,&quot;hit&quot;, or &quot;miss&quot;</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    placementState: <span class="string">""</span>,
+    ship: <span class="literal">null</span>
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Siblings is an object of four pointers that point
+to its adjacent cells. All placeable instances would
+make up a graph. Makes it easier to walk around.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  siblings: {},</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Iterates through each adjacent cell with a callback</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  andEachAdjacentCells: <span class="keyword">function</span>(num, direction, callback){
+    _.each(<span class="keyword">this</span>.andAdjacentCells(num, direction), callback);
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>All or nothing retrieval of current AND adjacent cells based on a direction
+and number of cells to retrieve.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  andAdjacentCells: <span class="keyword">function</span>(num, direction){
+    <span class="keyword">var</span> foundCells = [<span class="keyword">this</span>];
+    num--;<span class="comment">// because its inclusive of this</span>
+
+    <span class="keyword">while</span>(num--){
+      foundCells.push(_.last(foundCells).siblings[direction]);
+
+      <span class="keyword">if</span> ( _.last(foundCells) == <span class="literal">null</span>){
+        foundCells = [];
+        <span class="keyword">break</span>;
+      };
+    }
+    <span class="keyword">return</span> foundCells;
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Creates a reference the provided ship.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  place: <span class="keyword">function</span>(ship){
+    <span class="keyword">this</span>.set(<span class="string">"ship"</span>, ship);
+    <span class="keyword">this</span>.set(<span class="string">"placementState"</span>, <span class="string">"deployed"</span>);
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Hit the underlying ship AND set appropriate placement state.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  strike: <span class="keyword">function</span>(){
+    <span class="keyword">var</span> ship;
+    <span class="keyword">if</span>(ship = <span class="keyword">this</span>.get(<span class="string">"ship"</span>)){
+      <span class="keyword">this</span>.set(<span class="string">"placementState"</span>, <span class="string">"hit"</span>);
+      ship.hit();
+    }<span class="keyword">else</span>{
+      <span class="keyword">this</span>.set(<span class="string">"placementState"</span>, <span class="string">"miss"</span>);
+    }
+  }
+})</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <h2>models.Strikable</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>Strikable is a dumb version of Placeable, its to serve
+as the model for attacks against the opponent. Unlike Placeable
+there&#39;s no need to keep track of siblings, we only need to know
+know if there&#39;s anything at that cell.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>app.models.Strikable = Backbone.Model.extend({
+  defaults: {
+    afterMath: <span class="string">""</span>,
+    isOccupied:<span class="literal">false</span>,
+    position:<span class="number">0</span>
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Strikes and updates afterMath</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  strike: <span class="keyword">function</span>(){
+    <span class="keyword">if</span>(<span class="keyword">this</span>.get(<span class="string">'isOccupied'</span>)){
+      <span class="keyword">this</span>.set(<span class="string">'afterMath'</span>, <span class="string">'hit'</span>);
+    } <span class="keyword">else</span> {
+      <span class="keyword">this</span>.set(<span class="string">'afterMath'</span>, <span class="string">'miss'</span>)
+    }
+    <span class="keyword">return</span> <span class="keyword">this</span>;
+  }
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <h2>collections.Aresenal</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>A collection of your ships.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>app.collections.Aresenal = Backbone.Collection.extend({
+  model: app.models.Ship,
+  initialize: <span class="keyword">function</span>(){
+    <span class="keyword">var</span> self = <span class="keyword">this</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>Will trigger a destroyed event when all the ship is sunk.
+Use this to do a nice GAME OVER screen.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">this</span>.on(<span class="string">'hit'</span>, <span class="keyword">function</span>(){
+      <span class="keyword">var</span> defeated = self.every(<span class="keyword">function</span>(ship){
+        <span class="keyword">return</span> ship.isSunk();
+      })
+
+      <span class="keyword">if</span> (defeated){
+        self.trigger(<span class="string">"destroyed"</span>, self);
+      }
+    });
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>Totals the remaining lives of all ships in aresenal.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  remainingLives: <span class="keyword">function</span>(){
+    <span class="keyword">return</span> <span class="keyword">this</span>.reduce(<span class="keyword">function</span>(memo, obj){
+      <span class="keyword">return</span> memo + obj.get(<span class="string">'remainingLives'</span>);
+    }, <span class="number">0</span>);
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>returns true if all ships are deployed on the map.
+use this to determine if we can start the game.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  allDeployed: <span class="keyword">function</span>(){
+    <span class="keyword">return</span> <span class="keyword">this</span>.every(<span class="keyword">function</span>(ship){
+      <span class="keyword">return</span> ship.get(<span class="string">"deployed"</span>);
+    });
+  }
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <h2>collections.Strikables</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>Holds all stikable models.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>app.collections.Strikables = Backbone.Collection.extend({</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>Adds a position to the strikable on(&quot;add&quot;).
+We need to keep track of position because it&#39;ll be something
+we send over to the server. In other words, it&#39;s where you tried to attack.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  initialize: <span class="keyword">function</span>(){
+    <span class="keyword">this</span>.on(<span class="string">'add'</span>,<span class="keyword">function</span>(model, collection, options){
+      model.set(<span class="string">"position"</span>, options.at);
+    })
+  }
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <h2>collections.Placeables</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>Holds all placeable models.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>app.collections.Placeables = Backbone.Collection.extend({</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p>Treats a placeable as a node and creates a graph out of it.
+Takes in the length of one side the grid, could be used for different layouts.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  meshify: <span class="keyword">function</span>(len){</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p>Create the references</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>, l = <span class="keyword">this</span>.length-<span class="number">1</span>; i &lt;= l; i++) {
+      <span class="keyword">var</span> top = <span class="keyword">this</span>.at(i-len) || <span class="literal">null</span>,
+          bottom = <span class="keyword">this</span>.at(i+len) || <span class="literal">null</span>,
+          left = <span class="keyword">this</span>.at(i-<span class="number">1</span>) || <span class="literal">null</span>,
+          right = <span class="keyword">this</span>.at(i+<span class="number">1</span>) || <span class="literal">null</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p>Removes the right reference if we&#39;re at the right edge.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">if</span>(((i+<span class="number">1</span>)%len) == <span class="number">0</span>){
+        right = <span class="literal">null</span>;
+      }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <p>Removes the left reference if we&#39;re at the left edge.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">if</span>(((i)%len) == <span class="number">0</span>){
+        left = <span class="literal">null</span>;
+      }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>Set the siblings</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">this</span>.at(i).siblings = {
+        top:    top,
+        right:  right,
+        bottom: bottom,
+        left:   left
+      };
+    };
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <p>Strikes a particular model within the collection</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  strikeAt: <span class="keyword">function</span>(index){
+    <span class="keyword">var</span> cell = <span class="keyword">this</span>.at(index);
+    cell.strike();
+  }
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <h2>views.StrikableView</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <p>Listens for clicks and strikes the underlying model. Also keeps track of changes to its
+strikable model&#39;s afterMath attribute.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>app.views.StrikableView = Backbone.View.extend({
+  className: <span class="string">"strikable-cell"</span>,
+  templateName: <span class="string">"strikeCellTemplate"</span>,
+  initialize: <span class="keyword">function</span>(){
+    <span class="keyword">this</span>.listenTo(<span class="keyword">this</span>.model, <span class="string">"change:afterMath"</span>, <span class="keyword">this</span>.render);
+    <span class="keyword">this</span>.parent = <span class="keyword">this</span>.options.parent;
+  },
+  events: {<span class="string">"click"</span>:<span class="string">"strike"</span>},
+  strike: <span class="keyword">function</span>(){
+    <span class="keyword">this</span>.parent.trigger(<span class="string">"strike"</span>, <span class="keyword">this</span>);
+    <span class="keyword">this</span>.model.strike();
+    <span class="keyword">this</span>.render();
+  },
+  render: <span class="keyword">function</span>(){
+    <span class="keyword">var</span> template = app.templates[<span class="keyword">this</span>.templateName];
+    <span class="keyword">this</span>.$el.removeClass(<span class="keyword">this</span>.model.previous(<span class="string">"afterMath"</span>)).addClass(<span class="keyword">this</span>.model.get(<span class="string">"afterMath"</span>));
+    <span class="keyword">this</span>.$el.html(template(<span class="keyword">this</span>.model.toJSON()));
+    <span class="keyword">return</span> <span class="keyword">this</span>;
+  }
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <h2>views.PlaceableView</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <p>The responsiblity of PlaceableView is to call the attached draggable callback when a
+shipView is dropped on it and update when its underlying model changes when the opponent
+attacks. Only this and the ShipView uses Jquery UI&#39;s draggable/droppable.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>app.views.PlaceableView = Backbone.View.extend({
+  templateName:<span class="string">"placementCellTemplate"</span>,
+  initialize: <span class="keyword">function</span>(){</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <p>Set up the cell to be droppable.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">this</span>.$el.droppable({ tolerance: <span class="string">"pointer"</span>});
+    <span class="keyword">this</span>.listenTo(<span class="keyword">this</span>.model, <span class="string">"change:placementState"</span>, <span class="keyword">this</span>.render);
+    <span class="keyword">this</span>.listenTo(<span class="keyword">this</span>.model, <span class="string">"change:afterMath"</span>, <span class="keyword">this</span>.render);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-37">&#182;</a>
+              </div>
+              <p>Set up a parent view, this might come in handy later, when i want to fire
+the parent&#39;s events</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">this</span>.parent = <span class="keyword">this</span>.options.parent;
+  },
+  className:<span class="string">"placement-cell"</span>,
+  events: {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-38">&#182;</a>
+              </div>
+              <p>we attached a callback via the ShipView. Call it and pass the underlying model.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="string">"drop"</span>: <span class="keyword">function</span>(e, obj){
+      <span class="keyword">var</span> callback = obj.draggable.data(<span class="string">'callback'</span>);
+      callback ? callback(<span class="keyword">this</span>.model) : <span class="literal">false</span>;
+    }
+  },
+  render: <span class="keyword">function</span>(){
+    <span class="keyword">var</span> template = app.templates[<span class="keyword">this</span>.templateName];
+    <span class="keyword">this</span>.$el.removeClass(<span class="keyword">this</span>.model.previous(<span class="string">"placementState"</span>)).addClass(<span class="keyword">this</span>.model.get(<span class="string">"placementState"</span>));
+    <span class="keyword">this</span>.$el.html(template(<span class="keyword">this</span>.model.toJSON()));
+    <span class="keyword">return</span> <span class="keyword">this</span>;
+  }
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-39">&#182;</a>
+              </div>
+              <h2>views.PlaceablesView</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-40">&#182;</a>
+              </div>
+              <p>Responsible for creating all the views based on its collection
+and meshifying it&#39;s collection.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>app.views.PlaceablesView = Backbone.View.extend({
+  childView: app.views.PlaceableView,
+  initialize: <span class="keyword">function</span>(){
+    <span class="keyword">var</span> self = <span class="keyword">this</span>;
+    <span class="keyword">this</span>.collection.each(<span class="keyword">function</span>(obj){
+      <span class="keyword">var</span> child = <span class="keyword">new</span> self.childView({
+        model: obj,
+        parent:self
+      });
+      self.$el.append(child.render().el);
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-41">&#182;</a>
+              </div>
+              <p>The grid layout is hardcoded as a 10x10 grid for now</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">this</span>.collection.meshify(<span class="number">10</span>);
+  }
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-42">&#182;</a>
+              </div>
+              <h2>views.StrikablesView</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-43">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-43">&#182;</a>
+              </div>
+              <p>Responsible for creating all the views based on its collection.
+A reference to the parent is set on all child views.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>app.views.StrikablesView = Backbone.View.extend({
+  childView: app.views.StrikableView,
+  initialize: <span class="keyword">function</span>(){
+    <span class="keyword">var</span> self = <span class="keyword">this</span>;
+    <span class="keyword">this</span>.collection.each(<span class="keyword">function</span>(obj){
+      <span class="keyword">var</span> child = <span class="keyword">new</span> self.childView({
+        model: obj,
+        parent: self
+      });
+      self.$el.append(child.render().el);
+    });
+  }
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-44">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-44">&#182;</a>
+              </div>
+              <h2>views.ShipLotView</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-45">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-45">&#182;</a>
+              </div>
+              <p>Container view for the handle(the draggable thing) and control
+(shows the life and ship name) and assigns a shared model</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>app.views.ShipLotView = Backbone.View.extend({
+  initialize: <span class="keyword">function</span>(){
+    <span class="keyword">this</span>.handleView =  <span class="keyword">new</span> app.views.ShipView({model: <span class="keyword">this</span>.model});
+    <span class="keyword">this</span>.controlView = <span class="keyword">new</span> app.views.ShipControl({model: <span class="keyword">this</span>.model});
+
+    <span class="keyword">this</span>.$el.append(<span class="keyword">this</span>.handleView.render().el);
+    <span class="keyword">this</span>.$el.append(<span class="keyword">this</span>.controlView.render().el);
+  }
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-46">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-46">&#182;</a>
+              </div>
+              <h2>views.AresenalView</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-47">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-47">&#182;</a>
+              </div>
+              <p>Responsible for creating all the views based on its collection.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>app.views.AresenalView = Backbone.View.extend({
+  el: <span class="string">"#ships"</span>,
+  childView: app.views.ShipLotView,
+  initialize: <span class="keyword">function</span>(){
+    <span class="keyword">var</span> self = <span class="keyword">this</span>;
+    <span class="keyword">this</span>.shipLotViews=[];
+    <span class="keyword">this</span>.collection.each(<span class="keyword">function</span>(ship){
+      <span class="keyword">var</span> view = <span class="keyword">new</span> self.childView({
+        model: ship
+      });
+      self.shipLotViews.push(view);
+      self.$el.append(view.render().el);
+    })
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-48">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-48">&#182;</a>
+              </div>
+              <p>Finds all the draggables within itself and disables all of them.
+Use it for when the game starts so that the player doesn&#39;t move its ships.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  disableHandles: <span class="keyword">function</span>(){
+    <span class="keyword">this</span>.$el.find(<span class="string">".ui-draggable"</span>).draggable(<span class="string">'disable'</span>);
+  }
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-49">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-49">&#182;</a>
+              </div>
+              <h2>views.ShipControl</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-50">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-50">&#182;</a>
+              </div>
+              <p>Shows the remaining lives of the ship.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>app.views.ShipControl = Backbone.View.extend({
+  className: <span class="string">"control"</span>,
+  templateName: <span class="string">"shipLotTemplate"</span>,
+  initialize: <span class="keyword">function</span>(){
+    <span class="keyword">this</span>.render();
+    <span class="keyword">this</span>.listenTo(<span class="keyword">this</span>.model, <span class="string">"change"</span>, <span class="keyword">this</span>.render);
+  },
+  render: <span class="keyword">function</span>(){
+    <span class="keyword">var</span> template = app.templates[<span class="keyword">this</span>.templateName];
+    <span class="keyword">this</span>.$el.html(template(<span class="keyword">this</span>.presenter()));
+    <span class="keyword">return</span> <span class="keyword">this</span>;
+  },
+  presenter: <span class="keyword">function</span>(){
+    <span class="keyword">var</span> defaultPresenter = <span class="keyword">this</span>.model.toJSON(),
+    lifeMarks = [],
+    lives = defaultPresenter.remainingLives;
+
+    <span class="keyword">while</span>(lives--){
+      lifeMarks.push(<span class="string">"-"</span>);
+    }
+
+    <span class="keyword">return</span>  _.extend(defaultPresenter, {lifeMarks:lifeMarks});
+  }
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-51">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-51">&#182;</a>
+              </div>
+              <h2>views.ShipView</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-52">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-52">&#182;</a>
+              </div>
+              <p>Responsible for attaching ships to grids, pivoting them vertically/horizontally, and
+acting as a  draggable element.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>app.views.ShipView = Backbone.View.extend({
+  className:<span class="string">"ship-cell"</span>,
+  templateName:<span class="string">"shipTemplate"</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-53">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-53">&#182;</a>
+              </div>
+              <p>Keep track of the ships orientation, which is defaulted to &quot;right&quot;</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  orientationOnMap:<span class="string">"right"</span>,
+  initialize: <span class="keyword">function</span>(){
+    <span class="keyword">this</span>.occupiedCells = [];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-54">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-54">&#182;</a>
+              </div>
+              <p>jquery UI specific options</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">this</span>.$el.draggable({
+      snap: <span class="string">".placement-cell"</span>,
+      snapMode: <span class="string">"inner"</span>,
+      snapTolerance: <span class="number">25</span>
+    });
+
+    <span class="keyword">this</span>.listenTo(<span class="keyword">this</span>.model, <span class="string">"change"</span>, <span class="keyword">this</span>.render);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-55">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-55">&#182;</a>
+              </div>
+              <p>Detaches the attachShip function and bind it with this. This way the only thing
+the placement cell knows lesss about the ShipView.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">this</span>.$el.data(<span class="string">'callback'</span>, _.bind(<span class="keyword">this</span>.attachShip, <span class="keyword">this</span>));
+    <span class="keyword">this</span>.$el.on(<span class="string">'drag'</span>, <span class="keyword">this</span>.detachShip);
+
+    <span class="keyword">this</span>.template = <span class="keyword">this</span>.options.template;
+  },
+  events: {
+    <span class="string">"click .toggle"</span>: <span class="string">"pivotShip"</span>,
+    <span class="string">"drag"</span>:<span class="string">"detachShip"</span>
+  },
+  render: <span class="keyword">function</span>(){
+    <span class="keyword">var</span> template = app.templates[<span class="keyword">this</span>.templateName];
+    <span class="keyword">this</span>.$el.html(template(<span class="keyword">this</span>.presenter())) ;
+    <span class="keyword">return</span> <span class="keyword">this</span>;
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-56">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-56">&#182;</a>
+              </div>
+              <p>toggles the ships orientation</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  pivotShip: <span class="keyword">function</span>(e){
+    e.preventDefault();
+    <span class="keyword">this</span>.orientationOnMap = <span class="keyword">this</span>.orientationOnMap == <span class="string">"right"</span> ? <span class="string">"bottom"</span> : <span class="string">"right"</span>;
+    <span class="keyword">if</span>(_.isEmpty(<span class="keyword">this</span>.occupiedCells)) <span class="keyword">return</span> <span class="literal">false</span>;
+    <span class="keyword">var</span> head = <span class="keyword">this</span>.occupiedCells[<span class="number">0</span>];
+    <span class="keyword">this</span>.detachShip();
+    <span class="keyword">this</span>.attachShip(head, <span class="keyword">this</span>.orientationOnMap);
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-57">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-57">&#182;</a>
+              </div>
+              <p>Detaches the ship by going through each placement model and clearing the pointer
+to the ship.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  detachShip: <span class="keyword">function</span>(){
+    <span class="keyword">if</span>(_.isEmpty(<span class="keyword">this</span>.occupiedCells)) <span class="keyword">return</span> <span class="keyword">this</span>;
+
+    _.each(<span class="keyword">this</span>.occupiedCells, <span class="keyword">function</span>(cell){
+      cell.set(<span class="string">'ship'</span>, <span class="literal">null</span>);
+      cell.set(<span class="string">'placementState'</span>, <span class="string">""</span>);
+    })
+    <span class="keyword">this</span>.occupiedCells = [];
+    <span class="keyword">this</span>.model.set(<span class="string">"deployed"</span>, <span class="literal">false</span>);
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-58">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-58">&#182;</a>
+              </div>
+              <p>Disables drag for this particular view.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  disableDrag: <span class="keyword">function</span>(){
+    <span class="keyword">this</span>.$el.draggable(<span class="string">"disable"</span>);
+  },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-59">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-59">&#182;</a>
+              </div>
+              <p>Attaches the ship model to the placement model. Don&#39;t attach when theres a collision
+an already placed ship.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  attachShip: <span class="keyword">function</span>(cell, direction){
+    direction = direction || <span class="keyword">this</span>.orientationOnMap;
+    <span class="keyword">var</span> self = <span class="keyword">this</span>;
+    <span class="keyword">var</span> cells = cell.andAdjacentCells(<span class="keyword">this</span>.model.get(<span class="string">'length'</span>), direction);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-60">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-60">&#182;</a>
+              </div>
+              <p>todo: might want to extract the collision detecting in its own method.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> isCollision = !!_.find(cells, <span class="keyword">function</span>(cell){
+      <span class="keyword">return</span> !!cell.get(<span class="string">"ship"</span>);
+    });
+
+    <span class="keyword">if</span> (isCollision){
+      <span class="keyword">this</span>.trigger(<span class="string">'collided'</span>, <span class="keyword">this</span>);
+      <span class="keyword">return</span> <span class="literal">false</span>;
+    }
+
+    <span class="keyword">this</span>.occupiedCells = cells;
+    <span class="keyword">var</span> self = <span class="keyword">this</span>;
+    _.each(cells, <span class="keyword">function</span>(cell){
+      cell.place(self.model);
+    });
+
+    self.model.set(<span class="string">"deployed"</span>, <span class="literal">true</span>);
+  },
+  presenter: <span class="keyword">function</span>(){
+    <span class="keyword">var</span> defaultPresenter = <span class="keyword">this</span>.model.toJSON();
+    <span class="keyword">return</span> _.extend(defaultPresenter, {
+      shipMarker : defaultPresenter.shipType.charAt(<span class="number">0</span>)
+    });
+  }
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-61">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-61">&#182;</a>
+              </div>
+              <h2>views.GameStatsView</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-62">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-62">&#182;</a>
+              </div>
+              <p>Responsible for showing the total remainging lives and starting the game when
+all ships have been deployed.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>app.views.GameStatsView = Backbone.View.extend({
+  templateName:<span class="string">"gameStatsTemplate"</span>,
+  el: <span class="string">"#game-stats"</span>,
+  events: {
+    <span class="string">"click .start"</span>: <span class="keyword">function</span>(e){
+      e.preventDefault();
+      app.startGame();
+    }
+  },
+  initialize: <span class="keyword">function</span>(){
+    <span class="keyword">this</span>.listenTo(<span class="keyword">this</span>.collection, <span class="string">"change"</span>, <span class="keyword">this</span>.render);
+    <span class="keyword">this</span>.render();
+  },
+  render: <span class="keyword">function</span>(){
+    <span class="keyword">var</span> template = app.templates[<span class="keyword">this</span>.templateName];
+    <span class="keyword">this</span>.$el.html(template(<span class="keyword">this</span>.presenter()));
+  },
+  presenter: <span class="keyword">function</span>(){
+    <span class="keyword">return</span> {
+      remainingLives: <span class="keyword">this</span>.collection.remainingLives(),
+      allDeployed: <span class="keyword">this</span>.collection.allDeployed()
+    }
+  }
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-63">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-63">&#182;</a>
+              </div>
+              <h2>messages</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-64">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-64">&#182;</a>
+              </div>
+              <p>might come in handy when you want the ship&#39;s &quot;captain&quot; to scream something.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>app.messages={
+  <span class="string">"closecall"</span>: <span class="string">"That was close"</span>,
+  <span class="string">"imhit"</span>:<span class="string">"I'm Hit!"</span>,
+  <span class="string">"deply"</span>:<span class="string">"Yessir deploying nowww.."</span>,
+  <span class="string">"collision"</span>:<span class="string">"Nope don't want to go there.."</span>,
+  <span class="string">"pivot"</span>:<span class="string">"turning..."</span>,
+  <span class="string">"sunk"</span>:<span class="string">"never lose hope.."</span>,
+  <span class="string">"gameover"</span>:<span class="string">"You losee"</span>
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-65">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-65">&#182;</a>
+              </div>
+              <h2>other stuff</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-66">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-66">&#182;</a>
+              </div>
+              <p>builds all the templates</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>app.buildTemplates = <span class="keyword">function</span>(){
+  app.templates.strikeCellTemplate = Mustache.compile($(<span class="string">"#strikeCellTemplate"</span>).html());
+  app.templates.placementCellTemplate = Mustache.compile($(<span class="string">"#placementCellTemplate"</span>).html());
+  app.templates.shipTemplate = Mustache.compile($(<span class="string">"#shipTemplate"</span>).html());
+  app.templates.shipLotTemplate = Mustache.compile($(<span class="string">"#shipLotTemplate"</span>).html());
+  app.templates.gameStatsTemplate = Mustache.compile($(<span class="string">"#gameStatsTemplate"</span>).html());
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-67">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-67">&#182;</a>
+              </div>
+              <p>builds all the collections</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>app.buildCollections = <span class="keyword">function</span>(){
+  app.strikables = <span class="keyword">new</span> app.collections.Strikables([],{
+    model:app.models.Strikable
+  });
+
+  app.placeables = <span class="keyword">new</span> app.collections.Placeables([],{
+    model:app.models.Placeable
+  });
+
+  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">100</span>; i ; i--) {
+    app.strikables.push({});
+    app.placeables.push({});
+  };
+
+  app.aresenal = <span class="keyword">new</span> app.collections.Aresenal([{
+    length:<span class="number">3</span>,
+    shipType:<span class="string">"BattleShip"</span>
+  },
+  {
+    length:<span class="number">2</span>,
+    shipType:<span class="string">"PatrolBoat"</span>
+  }]);
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-68">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-68">&#182;</a>
+              </div>
+              <p>builds the battlefield</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>app.buildBattleField = <span class="keyword">function</span>(){
+  app.placeableMap = <span class="keyword">new</span> app.views.PlaceablesView({
+    el:<span class="string">"#board"</span>,
+    collection: app.placeables
+  });
+
+  app.strikableMap = <span class="keyword">new</span> app.views.StrikablesView({
+    el:<span class="string">'#st_board'</span>,
+    collection: app.strikables
+  });
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-69">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-69">&#182;</a>
+              </div>
+              <p>initialize</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>app.initialize = <span class="keyword">function</span>(){
+  app.buildTemplates();
+  app.buildCollections();
+  app.buildBattleField();
+
+  app.aresenalView = <span class="keyword">new</span> app.views.AresenalView({
+    collection: app.aresenal
+  });
+
+  app.gameStats = <span class="keyword">new</span> app.views.GameStatsView({
+    collection: app.aresenal
+  });
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-70">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-70">&#182;</a>
+              </div>
+              <p>starts the game, to be used when the player is ready</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>app.startGame = <span class="keyword">function</span>(){
+  <span class="keyword">if</span> (app.aresenal.allDeployed()){
+    app.aresenalView.disableHandles();
+  }
+
+  <span class="keyword">var</span> locations = app.placeableMap.collection.reduce(<span class="keyword">function</span>(memo, cell, index){
+    <span class="keyword">if</span>(cell.get(<span class="string">"ship"</span>)){
+      memo.push(index);
+    }
+    <span class="keyword">return</span> memo;
+  },[]);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-71">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-71">&#182;</a>
+              </div>
+              <p>You play with yourself for now.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  _.each(locations, <span class="keyword">function</span>(i){
+    app.strikables.at(i).set(<span class="string">'isOccupied'</span>, <span class="literal">true</span>);
+  });
+
+  app.strikableMap.on(<span class="string">'strike'</span>, <span class="keyword">function</span>(cell){
+    app.placeableMap.collection.strikeAt(cell.model.get(<span class="string">"position"</span>));
+  });
+}
+
+$(<span class="keyword">function</span>(){
+  app.initialize();
+})</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
 </body>
 </html>
